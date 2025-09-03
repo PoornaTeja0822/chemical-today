@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 interface SpotlightCard {
-  id: number;
+  id: string;
   image: string;
   tag: string;
   title: string;
@@ -9,59 +9,96 @@ interface SpotlightCard {
   url: string;
 }
 
-const spotlightCards: SpotlightCard[] = [
-  {
-    id: 1,
-    image: "https://new-chemical-today.s3.amazonaws.com/News/From_400_to_6,50,000_MTPA_and_Beyond_with_Shivtek_Spechemi_Ind._Ltd._20250627042925/Amitt_Nenwani,_Managing_Director_of_Shivtek_Spechem_Industries_Ltd._.webp",
-    tag: "Plant Visit",
-    title:
-      "From 400 to 6,50,000 MTPA and Beyond with Shivtek Spechemi Industries Ltd",
-    source: "Chemical Today",
-    url: "https://www.chemicaltoday.in/news/Plant%20Visit/685e1e26aee2dfa06d5544d7",
-  },
-  {
-    id: 2,
-    image: "https://new-chemical-today.s3.amazonaws.com/News/From_Proprietary_Systems_to_Open_Standards:_The_O-PAS_Revolution_Explained_20250731055602/Ravindra_Jagasia,_Global_Business_Development_(Automation)_%E2%80%93_Strategic_Growth_Initiatives_at_R._STAH.webp",
-    tag: "Management",
-    title:
-      "From Proprietary Systems to Open Standards: The O-PAS Revolution Explained",
-    source: "Chemical Today",
-    url: "https://www.chemicaltoday.in/news/Management/688b0572aee2dfa06d55467f",
-  },
-  {
-    id: 3,
-    image: "https://new-chemical-today.s3.amazonaws.com/News/Future_of_the_Connected_Chemical_Plant:_Edge,_AI,_and_Cloud_in_Action_20250731050718/Sriram_Paramanand,_Director_%E2%80%93_Partnering_at_Rockwell_Automation_India..webp",
-    tag: "Management",
-    title:
-      "Future of the Connected Chemical Plant: Edge, AI, and Cloud in Action",
-    source: "Chemical Today",
-    url: "https://www.chemicaltoday.in/news/Management/688afa06aee2dfa06d55467d",
-  },
-  {
-    id: 4,
-    image: "https://new-chemical-today.s3.amazonaws.com/News/Crafting%20Market-Ready%20Innovations%20through%20IP%20and%20Regulatory%20Synergy/Dr._Sudha_Kannan_Vice_President_IP__Statutory_Compliance_RD_Advanced_Materials_Aditya_Birla_Chemicals_Grasim_Industries._Web_Image_82.webp",
-    tag: "Management",
-    title:
-      "Crafting Market-Ready Innovations through IP and Regulatory Synergy",
-    source: "Chemical Today",
-    url: "https://www.chemicaltoday.in/news/Management/688b3127aee2dfa06d554684",
-  },
-  {
-    id: 5,
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/News/Building_Coalitions_to_Turn_Sustainability_Admiration_into_Real_Impact_20250729055756/Charlie_Tan,_CEO_of_Global_Impact_Coalition(GIC)..webp",
-    tag: "Management",
-    title:
-      "Building Coalitions to Turn Sustainability Admiration into Real Impact",
-    source: "Chemical Today",
-    url: "https://www.chemicaltoday.in/news/Management/688862e4aee2dfa06d55465f",
-  },
-];
+interface SpotlightSection {
+  horizontal_banner: {
+    image: string;
+    redirect_url: string;
+  };
+  plant_visit: SpotlightCard;
+  management1: SpotlightCard;
+  management2: SpotlightCard;
+  management3: SpotlightCard;
+  management4: SpotlightCard;
+}
 
 const Spotlight: React.FC = () => {
+  const [spotlightData, setSpotlightData] = useState<SpotlightSection | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchSpotlightData = async () => {
+      try {
+        const response = await fetch("https://admin.chemicaltoday.in/homepage/home_page_data"); // replace with your backend API endpoint
+        const data = await response.json();
+
+        // Map API data into our SpotlightCard[] format
+        const formattedData: SpotlightSection = {
+          horizontal_banner: {
+            image: data.spotlightSection.horizontal_banner.image,
+            redirect_url: data.spotlightSection.horizontal_banner.redirect_url,
+          },
+          plant_visit: {
+            id: data.spotlightSection.plant_visit.id,
+            image: data.spotlightSection.plant_visit.web_image_url,
+            tag: "Plant Visit",
+            title: data.spotlightSection.plant_visit.title,
+            source: data.spotlightSection.plant_visit.published_by,
+            url: `/news/Plant%20Visit/${data.spotlightSection.plant_visit.id}`,
+          },
+          management1: {
+            id: data.spotlightSection.management1.id,
+            image: data.spotlightSection.management1.web_image_url,
+            tag: data.spotlightSection.management1.news_type,
+            title: data.spotlightSection.management1.title,
+            source: data.spotlightSection.management1.published_by,
+            url: `/news/Management/${data.spotlightSection.management1.id}`,
+          },
+          management2: {
+            id: data.spotlightSection.management2.id,
+            image: data.spotlightSection.management2.web_image_url,
+            tag: data.spotlightSection.management2.news_type,
+            title: data.spotlightSection.management2.title,
+            source: data.spotlightSection.management2.published_by,
+            url: `/news/Management/${data.spotlightSection.management2.id}`,
+          },
+          management3: {
+            id: data.spotlightSection.management3.id,
+            image: data.spotlightSection.management3.web_image_url,
+            tag: data.spotlightSection.management3.news_type,
+            title: data.spotlightSection.management3.title,
+            source: data.spotlightSection.management3.published_by,
+            url: `/news/Management/${data.spotlightSection.management3.id}`,
+          },
+          management4: {
+            id: data.spotlightSection.management4.id,
+            image: data.spotlightSection.management4.web_image_url,
+            tag: data.spotlightSection.management4.news_type,
+            title: data.spotlightSection.management4.title,
+            source: data.spotlightSection.management4.published_by,
+            url: `/news/Management/${data.spotlightSection.management4.id}`,
+          },
+        };
+
+        setSpotlightData(formattedData);
+      } catch (error) {
+        console.error("Error fetching spotlight data:", error);
+      }
+    };
+
+    fetchSpotlightData();
+  }, []);
+
+  if (!spotlightData) {
+    return <div>Loading Spotlight...</div>;
+  }
+
+  const { plant_visit, management1, management2, management3, management4 } =
+    spotlightData;
+
   return (
     <div className="h-auto ml-[5%] mr-[5%]">
-      {/* Header Row with Line */}
+      {/* Header Row */}
       <div className="flex items-center justify-between border-b border-gray-300 mb-4 pb-0">
         <h1 className="text-xl font-semibold text-black bg-gray-300 px-10 py-1 w-fit mb-0">
           Spotlight
@@ -71,49 +108,48 @@ const Spotlight: React.FC = () => {
         </a>
       </div>
 
-      {/* Two Column Layout (50% + 50%) */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 h-200px w-200px"> 
-        {/* Big Card - 50% */}
-     <a
-  href={spotlightCards[0].url}
-  target="_blank"
-  rel="noopener noreferrer"
-  className="bg-white block"
->
-  <img
-    src={spotlightCards[0].image}
-    alt={spotlightCards[0].title}
-    className="h-[350px] w-[530px] object-fill"
-  />
-  <div className="">
-     <span
-                      style={{ backgroundColor: "#085EAB" }}
-                      className="text-white text-xm px-2 py-2 mt-1 w-fit">
-             
-      {spotlightCards[0].tag}
-    </span>
-    <h2 className="mt-2 text-xl font-semibold text-gray-800 ">
-      {spotlightCards[0].title}
-    </h2>
-    <p className="text-sm text-gray-500">{spotlightCards[0].source}</p>
-  </div>
-</a>
+      {/* Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Big Card */}
+        <a
+          href={plant_visit.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="bg-white block"
+        >
+          <img
+            src={plant_visit.image}
+            alt={plant_visit.title}
+            className="h-[350px] w-[530px] object-fill"
+          />
+          <div>
+            <span
+              style={{ backgroundColor: "#085EAB" }}
+              className="text-white text-xm px-2 py-2 mt-1 w-fit"
+            >
+              {plant_visit.tag}
+            </span>
+            <h2 className="mt-2 text-xl font-semibold text-gray-800">
+              {plant_visit.title}
+            </h2>
+            <p className="text-sm text-gray-500">{plant_visit.source}</p>
+          </div>
+        </a>
 
-
-        {/* Four Small Cards - 50% */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ">
-          {spotlightCards.slice(1).map((card) => (
+        {/* Four Small Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {[management1, management2, management3, management4].map((card) => (
             <a
               key={card.id}
               href={card.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="bg-white block "
+              className="bg-white block"
             >
               <img
                 src={card.image}
                 alt={card.title}
-                className="h-32 w-120 object-cover" 
+                className="h-32 w-120 object-cover"
               />
               <div className="p-3">
                 <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded">
@@ -129,18 +165,17 @@ const Spotlight: React.FC = () => {
         </div>
       </div>
 
-      {/* Advertisement Section */}
+      {/* Advertisement */}
       <div className="mt-10 flex justify-center">
         <a
-          href="https://chemicaltoday.in/e-magazines"
+          href={spotlightData.horizontal_banner.redirect_url}
           target="_blank"
           rel="noopener noreferrer"
           className="relative bg-white mb-6 block"
         >
-          {/* Ad Image */}
           <img
-            src="https://new-chemical-today.s3.amazonaws.com/advertisements/August-magazine-live/August-magazine-live/March_2025_Magazine_is_live.gif"
-            alt="Chemical Today August 2025 Magazine"
+            src={spotlightData.horizontal_banner.image}
+            alt="Spotlight Banner"
             className="w-full h-auto object-fill"
           />
         </a>

@@ -1,84 +1,106 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-interface Product {
+interface ProductPost {
+  id: string;
   image: string;
   date: string;
   title: string;
   source: string;
-  link?: string; // optional link
+  link?: string;
 }
 
-const sampleProducts: Product[] = [
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/News/Elkem_Unveils_High-Performance_Silicone-Based_Makeup_and_Skincare_Bases_20250730074553/Source:_Elkem_ASA.webp",
-    date: "Jul 30, 2025",
-    title:
-      "Elkem Unveils High-Performance Silicone-Based Makeup and Skincare Bases",
-    source: "Chemical Today",
-    link: "https://www.elkem.com/",
-  },
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/News/BASF_Launches_Ultramid%C2%AE_T6000_for_Durable,_Color-Stable_E&E_Components_20250729064020/PPA_for_small_and_color-stable_E&E_parts_(Source:_BASF_2025).webp",
-    date: "Jul 29, 2025",
-    title:
-      "BASF Launches Ultramid® T6000 for Durable, Color-Stable E&E Components",
-    source: "Chemical Today",
-    link: "https://www.basf.com/",
-  },
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/News/BASF%E2%80%99s_Ultrason%C2%AE_Brings_Design_and_Durability_to_Japanese_Specialty_Plastic_Market_20250723114146/Reusable_tableware_made_of_specialty_plastic_Ultrason%C2%AE_(Source:_Photo:_BASF_2025).webp",
-    date: "Jul 23, 2025",
-    title:
-      "BASE's Ultrason® Brings Design and Durability to Modern Applications",
-    source: "Chemical Today",
-    link: "https://www.basf.com/",
-  },
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/News/BYK_Unveils_UV_Stabilizer_for_Long-Lasting_Polyamide_Performance_20250723084938/Source:_BYK-Chemie_GmbH._.webp",
-    date: "Jul 23, 2025",
-    title:
-      "BYK Unveils UV Stabilizer for Long-Lasting Polyamide Performance",
-    source: "Chemical Today",
-    link: "https://www.byk.com/",
-  },
-];
+interface Advertisement {
+  id: string;
+  image: string;
+  redirect_url: string;
+  name: string;
+}
 
-const samplePosts: Product[] = [
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/advertisements/7th%20Edition%20ICC%20Sustainability%20Conclave%202025/7th%20Edition%20ICC%20Sustainability%20Conclave%202025/800_x_400_px_Banner_1.jpg",
-    date: "",
-    title: "",
-    source: "",
-  },
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/advertisements/Nynas%20Ad/Nynas%20Ad/Nynas_banner_800x400_pix.jpg",
-    date: "",
-    title: "",
-    source: "",
-  },
-  {
-    image:
-      "https://new-chemical-today.s3.amazonaws.com/advertisements/Shriram-Digital/Shriram-Digital/20240731DCMShriramDigitalBanner800x400-YS_1.jpg",
-    date: "",
-    title: "",
-    source: "",
-  },
-];
+interface ProductSectionData {
+  posts: ProductPost[];
+  ads: Advertisement[];
+}
 
 const Products: React.FC = () => {
-  const getAdLink = (index: number) => {
-    if (index === 0) return "https://www.iccsustainabilityconclave.org/";
-    if (index === 1) return "https://www.nynas.com/";
-    if (index === 2)
-      return "https://www.dcmshriram.com/our-businesses/chlor-vinyl-business";
-    return "#";
-  };
+  const [productData, setProductData] = useState<ProductSectionData | null>(
+    null
+  );
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch("https://admin.chemicaltoday.in/homepage/home_page_data"); // replace with your actual API endpoint
+        const data = await response.json();
+
+        const formattedData: ProductSectionData = {
+          posts: [
+            {
+              id: data.productSection.post1.id,
+              image: data.productSection.post1.web_image_url,
+              date: data.productSection.post1.published_date,
+              title: data.productSection.post1.title,
+              source: data.productSection.post1.published_by,
+              link: `/news/Products/${data.productSection.post1.id}`,
+            },
+            {
+              id: data.productSection.post2.id,
+              image: data.productSection.post2.web_image_url,
+              date: data.productSection.post2.published_date,
+              title: data.productSection.post2.title,
+              source: data.productSection.post2.published_by,
+              link: `/news/Products/${data.productSection.post2.id}`,
+            },
+            {
+              id: data.productSection.post3.id,
+              image: data.productSection.post3.web_image_url,
+              date: data.productSection.post3.published_date,
+              title: data.productSection.post3.title,
+              source: data.productSection.post3.published_by,
+              link: `/news/Products/${data.productSection.post3.id}`,
+            },
+            {
+              id: data.productSection.post4.id,
+              image: data.productSection.post4.web_image_url,
+              date: data.productSection.post4.published_date,
+              title: data.productSection.post4.title,
+              source: data.productSection.post4.published_by,
+              link: `/news/Products/${data.productSection.post4.id}`,
+            },
+          ],
+          ads: [
+            {
+              id: data.productSection.advt1.id,
+              image: data.productSection.advt1.image,
+              redirect_url: data.productSection.advt1.redirect_url,
+              name: data.productSection.advt1.name,
+            },
+            {
+              id: data.productSection.advt2.id,
+              image: data.productSection.advt2.image,
+              redirect_url: data.productSection.advt2.redirect_url,
+              name: data.productSection.advt2.name,
+            },
+            {
+              id: data.productSection.advt3.id,
+              image: data.productSection.advt3.image,
+              redirect_url: data.productSection.advt3.redirect_url,
+              name: data.productSection.advt3.name,
+            },
+          ],
+        };
+
+        setProductData(formattedData);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  if (!productData) {
+    return <div>Loading Products...</div>;
+  }
 
   return (
     <div className="h-auto ml-[5%] mr-[5%]">
@@ -90,9 +112,9 @@ const Products: React.FC = () => {
             Products
           </h1>
           <div className="grid grid-cols-2 gap-2 flex-1 overflow-y-auto pr-100">
-            {sampleProducts.map((product, index) => (
+            {productData.posts.map((product) => (
               <a
-                key={index}
+                key={product.id}
                 href={product.link || "#"}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -132,16 +154,16 @@ const Products: React.FC = () => {
           </div>
 
           <div className="flex-2 flex flex-col space-y-5 justify-center">
-            {samplePosts.map((post, index) => (
-              <div key={index} className="flex justify-center">
+            {productData.ads.map((ad) => (
+              <div key={ad.id} className="flex justify-center">
                 <a
-                  href={getAdLink(index)}
+                  href={ad.redirect_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   <img
-                    src={post.image}
-alt={`Post ${index + 1}`}
+                    src={ad.image}
+                    alt={ad.name}
                     className="w-full h-[200px] object-contain"
                   />
                 </a>
